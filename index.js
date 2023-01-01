@@ -1,7 +1,22 @@
 const express = require('express')
+const morgan = require('morgan')
+const logger = require('morgan')
 const app = express()
 
 app.use(express.json())
+morgan.token('person', (req) => {
+    return JSON.stringify(req.body)
+})
+app.use(logger(':method :url :status :res[content-length] - :response-time ms :person',{
+    skip: (req,res) => {
+        return req.method !== 'POST'
+    }
+}))
+app.use(logger('tiny',{
+    skip: (req,res) => {
+        return req.method === 'POST'
+    }
+}))
 
 let persons = [
     {
@@ -49,14 +64,12 @@ app.post('/api/persons', (request, response) => {
         number: body.number,
         id: Math.random().toString(16)
     }
-    console.log(person)
     persons = persons.concat(person)
     response.json(person)
 })
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    console.log(id)
     const person = persons.find(p => p.id === id)
     if (person) {
         return response.json(person)
@@ -66,8 +79,7 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    console.log(id)
+    const id = request.params.id
 
     persons = persons.filter(p => p.id !== id)
 
