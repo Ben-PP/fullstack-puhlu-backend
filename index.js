@@ -1,7 +1,12 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const logger = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
+
+
+
 const app = express()
 
 app.use(cors())
@@ -20,31 +25,10 @@ app.use(logger('tiny',{
     }
 }))
 
-let persons = [
-    {
-        id: Math.random().toString(16),
-        name: 'Arto Hellas',
-        number: '040-123456',
-    },
-    {
-        id: Math.random().toString(16),
-        name: 'Ada Lovelace',
-        number: '39-44-5323523',
-    },
-    {
-        id: Math.random().toString(16),
-        name: 'Dan Abramov',
-        number: '12-43-234345',
-    },
-    {
-        id: Math.random().toString(16),
-        name: 'Mary Poppendick',
-        number: '39-23-6423122',
-    },
-]
-
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({}).then(persons => {
+        response.json(persons)
+    })
 })
 
 app.post('/api/persons', (request, response) => {
