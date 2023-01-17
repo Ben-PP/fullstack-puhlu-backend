@@ -7,7 +7,7 @@ if (process.argv.length<3) {
     process.exit(1)
 }
 
-const url = process.env.DATABASE_URL
+const url = `mongodb+srv://root:${process.argv[2]}@cluster0.oc48kme.mongodb.net/puhlu?retryWrites=true&w=majority`
 
 mongoose.connect(url)
 
