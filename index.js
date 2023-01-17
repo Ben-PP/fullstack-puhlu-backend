@@ -39,19 +39,23 @@ app.post('/api/persons', (request, response) => {
             error: 'name or number is missing'
         })
     }
+    /* Not required at the moment
     if (persons.find(p => p.name === body.name)) {
         return response.status(400).json({
             error: 'name must be unique'
         })
     }
+    */
 
-    const person = {
+    const person = new Person({
+        id: Math.random().toString(16),
         name: body.name,
         number: body.number,
-        id: Math.random().toString(16)
-    }
-    persons = persons.concat(person)
-    response.json(person)
+    })
+    person.save().then(savedPerson => {
+        console.log(`Person ${savedPerson.name} saved!`)
+        response.json(savedPerson)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
