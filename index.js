@@ -37,13 +37,6 @@ app.post('/api/persons', (request, response, next) => {
             error: 'name or number is missing'
         })
     }
-    /* Not required at the moment
-    if (persons.find(p => p.name === body.name)) {
-        return response.status(400).json({
-            error: 'name must be unique'
-        })
-    }
-    */
 
     const person = new Person({
         id: Math.random().toString(16),
@@ -100,6 +93,8 @@ const errorHandler = (error, request, response, next) => {
     console.log(error.message)
     if (error.name === 'CastError') {
         return response.status(400).send({error: 'malformatted id'})
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({error: error.message})
     }
     next(error)
 }

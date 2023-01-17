@@ -4,7 +4,7 @@ mongoose.set('strictQuery', false)
 
 const url = process.env.DATABASE_URL
 
-console.log('Connecting to ', url)
+console.log('Connecting to MongoDB')
 mongoose.connect(url).then(result => {
     console.log('Connected to MongoDB')
 }).catch(error => {
@@ -13,8 +13,23 @@ mongoose.connect(url).then(result => {
 
 const personSchema = new mongoose.Schema({
     id: String,
-    name: String,
-    number: String,
+    name: {
+        type: String,
+        minLength: 3,
+        required: true,
+    },
+    number: {
+        type: String,
+        validate: {
+            validator: (v) => {
+                if (v.length === 9) {
+                    console.log(v.length)
+                    return /^[0-9]{2,3}-[0-9]{5,6}$/.test(v)
+                }
+                return false
+            }
+        }
+    },
 })
 
 personSchema.set('toJSON', {
