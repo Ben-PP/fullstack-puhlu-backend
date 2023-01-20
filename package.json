@@ -1,6 +1,6 @@
 {
   "name": "fullstack-puhlu-backend",
-  "version": "0.3.0",
+  "version": "3.21.0",
   "description": "Backend for phonebook app",
   "main": "index.js",
   "scripts": {
